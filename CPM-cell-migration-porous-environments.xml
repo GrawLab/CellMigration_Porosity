@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<MorpheusModel version="4">
+    <Description>
+        <Title>cell_motility_fibrous_porous_media</Title>
+        <Details>Cell migration in fibrous porous media - Authors: Laeschkir Wuerthner and Frederik Graw</Details>
+    </Description>
+    <Global>
+        <Constant symbol="cell_vol" value="2500"/>
+        <Constant symbol="cell_surf" value="1.1"/>
+        <Constant symbol="motion_str" value="3"/>
+        <Constant symbol="Dr" value="1/600"/>
+        <Constant symbol="dt" value="0.1"/>
+        <Constant symbol="mcs" value="1"/>
+    </Global>
+    <Space>
+        <Lattice class="cubic">
+            <Size symbol="size" value="400,400, 400"/>
+            <Neighborhood>
+                <Order>optimal</Order>
+            </Neighborhood>
+            <BoundaryConditions>
+                <Condition type="periodic" boundary="x"/>
+                <Condition type="periodic" boundary="y"/>
+                <Condition type="periodic" boundary="z"/>
+            </BoundaryConditions>
+            <Domain boundary-type="noflux">
+                <Image path="disordered-fibrous-media-porosity-065.tiff"/>
+            </Domain>
+        </Lattice>
+        <SpaceSymbol symbol="space"/>
+    </Space>
+    <Time>
+        <StartTime value="0"/>
+        <StopTime value="1e6"/>
+        <TimeSymbol symbol="time"/>
+    </Time>
+    <CellTypes>
+        <CellType class="medium" name="medium"/>
+        <CellType class="medium" name="ecm"/>
+        <CellType class="biological" name="cell">
+            <VolumeConstraint strength="1" target="cell_vol"/>
+            <PropertyVector notation="x,y,z" symbol="move_dir" value="sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)"/>
+            <DirectedMotion retraction="false" strength="motion_str" protrusion="true" direction="move_dir"/>
+            <SurfaceConstraint strength="1.5" target="cell_surf" mode="aspherity"/>
+            <System time-step="dt" solver="Euler-Maruyama [stochastic, O(1)]">
+                <DiffEqn symbol-ref="phi">
+                    <Expression>sqrt(2*Dr/dt)*1/sin(theta)*rand_norm(0,1)</Expression>
+                </DiffEqn>
+                <DiffEqn symbol-ref="theta">
+                    <Expression>Dr/tan(theta)+sqrt(2*Dr/dt)*rand_norm(0,1)</Expression>
+                </DiffEqn>
+                <VectorRule symbol-ref="move_dir" notation="x,y,z">
+                    <Expression>sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)</Expression>
+                </VectorRule>
+            </System>
+            <Property symbol="phi" value="rand_uni(0,2*pi)"/>
+            <Property symbol="theta" value="rand_uni(0.1,pi)"/>
+        </CellType>
+    </CellTypes>
+    <CPM>
+        <Interaction default="0">
+            <Contact value="0" type1="cell" type2="medium"/>
+            <Contact value="10" type1="cell" type2="cell"/>
+            <Contact value="0" type1="cell" type2="ecm"/>
+        </Interaction>
+        <MonteCarloSampler stepper="edgelist">
+            <MCSDuration value="mcs"/>
+            <Neighborhood>
+                <Order>1</Order>
+            </Neighborhood>
+            <MetropolisKinetics temperature="2"/>
+        </MonteCarloSampler>
+        <ShapeSurface scaling="norm">
+            <Neighborhood>
+                <Order>optimal</Order>
+            </Neighborhood>
+        </ShapeSurface>
+    </CPM>
+    <CellPopulations>
+        <BoundaryValue type="value" boundary="domain" value="ecm"/>
+        <Population type="cell" size="1">
+            <InitRectangle number-of-cells="200" mode="random">
+                <Dimensions origin="0, 0, 0" size="size.x, size.y, size.z"/>
+            </InitRectangle>
+        </Population>
+    </CellPopulations>
+    <Analysis>
+        <Logger time-step="50">
+            <Input>
+                <Symbol symbol-ref="cell.center.x"/>
+                <Symbol symbol-ref="cell.center.y"/>
+                <Symbol symbol-ref="cell.center.z"/>
+            </Input>
+            <Output>
+                <TextOutput file-separation="cell"/>
+            </Output>
+            <Restriction>
+                <Celltype celltype="cell"/>
+            </Restriction>
+        </Logger>
+        <ModelGraph format="svg" reduced="false" include-tags="#untagged"/>
+        <Logger time-step="1e6">
+            <Input>
+                <Symbol symbol-ref="cell_vol"/>
+                <Symbol symbol-ref="cell_surf"/>
+                <Symbol symbol-ref="motion_str"/>
+                <Symbol symbol-ref="Dr"/>
+                <Symbol symbol-ref="dt"/>
+            </Input>
+            <Output>
+                <TextOutput file-name="params"/>
+            </Output>
+        </Logger>
+    </Analysis>
+</MorpheusModel>
