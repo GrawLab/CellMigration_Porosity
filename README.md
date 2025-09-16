@@ -12,4 +12,6 @@ The model allows simulation of cell migration within complex, porous environment
 The model is implemented within the powerful cellular Potts modelling framework Morpheus (https://morpheus.gitlab.io/), using Morpheus version 2.3.8. The xml-file of the model contains the basic code for cellular motility and active Brownian motion dynamics. Porous environments are integrated within the simulation framework as individual tiff-images. This can be synthetically generated structures, as e.g. by using the open-source python library PoreSpy, or experimentally obtained images. One example environment is provided within this repository.
 
 ## Files
+* *CPM-cell-migration-porous-environments.xml* - xml-Morpheus file containing the simulation code
+* *disordered-fibrous-media-porosity-062.tiff* - tiff-image of a disordered porous environment with porosity 0.62 generated with *PoreSpy* (J. Gostick, Z. Khan, T. Tranter, M. Kok, M. Agnaou, M. Sadeghi, and R. Jervis, PoreSpy: A Python Toolkit for Quantitative Analysis of Porous Media Images, *Journal of Open Source Software* 4, 1296 (2019))
 
