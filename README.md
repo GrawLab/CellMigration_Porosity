@@ -3,7 +3,7 @@
 ## A cellular Potts model to simulate cell migration in porous environments ##
 
 The provided code allows the simulation of cell migration within disordered porous environments by accounting for cell shape dynamics using the cellular Potts modelling framework. It relates to the following publication with details on the model structure and implementation:
-* Würthner L., Graw F.: **Geometry of disordered porous environments regulates cell migration**
+* Würthner L., Graw F.: **Geometry of disordered porous environments regulates cell migration** *bioRxiv* 2025.09.17.676737; doi: https://doi.org/10.1101/2025.09.17.676737
 
 ## Description
 The model allows simulation of cell migration within complex, porous environments and is implemented as a cellular Potts model (CPM) using Morpheus. It especially accounts for cell body deformation to capture effects of cell confinement within the porous structures, with cell motility being modelled by active Brownian motion. The model can be readily applied to various porous environments, with environments being easily interchangeable using synthetic or experimentally generated 3D tiff-images.
