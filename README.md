@@ -2,6 +2,10 @@
 
 ## A cellular Potts model to simulate cell migration in porous environments ##
 
+
+https://github.com/user-attachments/assets/933006bb-8772-497b-9bb0-857fa5e6c6e1
+
+
 The provided code allows the simulation of cell migration within disordered porous environments by accounting for cell shape dynamics using the cellular Potts modelling framework. It relates to the following publication with details on the model structure and implementation:
 * Würthner L., Graw F.: **Geometry of disordered porous environments regulates cell migration** *bioRxiv* 2025.09.17.676737; doi: https://doi.org/10.1101/2025.09.17.676737
 
